@@ -80,12 +80,12 @@ public class MainMenu extends JFrame {
 
 		
 		
-		JButton btnQuestions = new JButton("Questions");
+		JButton btnQuestions = new JButton("Database");
 		btnQuestions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (playing == false) {
-					System.out.println("Open Questions");
-					Questions questionsWindow = new Questions();
+					System.out.println("Open Database");
+					DisplayQuestions questionsWindow = new DisplayQuestions();
 					questionsWindow.setVisible(true);
 					setVisible(false);
 				}
