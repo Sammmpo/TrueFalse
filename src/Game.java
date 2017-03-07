@@ -14,51 +14,43 @@ public class Game extends JFrame {
 	
 	int count = 1;
 	int points = 0;
-	int userAnswer;
+	boolean userAnswer;
+	private QuestionQueries questionQueries;
 	
 	public Game() {
+		super("Game");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null); 
 		setBounds(0, 0, 500, 300);
 		setLocationRelativeTo(null);
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		getContentPane().setLayout(gridBagLayout);
 		
-		
+		questionQueries = new QuestionQueries();
 		
 		findQuestion();
-		
+		howManyQuestions();
 
 		
 		JButton btnTrue = new JButton("True");
 		btnTrue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				userAnswer = 1;
+				userAnswer = true;
 				checkAnswer();
 			}
 		});
-		GridBagConstraints gbc_btnTrue = new GridBagConstraints();
-		gbc_btnTrue.insets = new Insets(0, 0, 5, 0);
-		gbc_btnTrue.gridx = 5;
-		gbc_btnTrue.gridy = 2;
-		getContentPane().add(btnTrue, gbc_btnTrue);
+		btnTrue.setBounds(200, 100, 100, 30);
+		getContentPane().add(btnTrue);
 		
 		
 		
 		JButton btnFalse = new JButton("False");
 		btnFalse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				userAnswer = 0;
+				userAnswer = false;
 				checkAnswer();
 			}
 		});
-		GridBagConstraints gbc_btnFalse = new GridBagConstraints();
-		gbc_btnFalse.insets = new Insets(0, 0, 5, 0);
-		gbc_btnFalse.gridx = 5;
-		gbc_btnFalse.gridy = 4;
-		getContentPane().add(btnFalse, gbc_btnFalse);
+		btnFalse.setBounds(200, 140, 100, 30);
+		getContentPane().add(btnFalse);
 		
 		
 		
@@ -71,19 +63,15 @@ public class Game extends JFrame {
 				setVisible(false);
 			}
 		});
-		GridBagConstraints gbc_btnBack = new GridBagConstraints();
-		gbc_btnBack.gridx = 5;
-		gbc_btnBack.gridy = 7;
-		getContentPane().add(btnBack, gbc_btnBack);
+		btnBack.setBounds(200, 200, 100, 30);
+		getContentPane().add(btnBack);
 		
 		
 	}
 	
 	private void checkAnswer() {
-		// String query = "SELECT answer FROM question WHERE id = count";
-		// String result;
-		int answer = 1;
-		if (userAnswer == answer) {
+		boolean correctAnswer = questionQueries.getAnswer(count);
+		if (userAnswer == correctAnswer) {
 			points++;
 			count++;
 			System.out.println("Correct. Your score is now: " + points);
@@ -95,31 +83,36 @@ public class Game extends JFrame {
 		}
 	}
 	
-	public void findQuestion() {
-		String query = "SELECT id FROM question WHERE id=MAX";
-		int result = 10;
-		int cap = result;
-		if (count <= cap){
-			JPanel list = new JPanel();
-			GridBagConstraints gbc_panel = new GridBagConstraints();
-			gbc_panel.insets = new Insets(0, 0, 5, 0);
-			gbc_panel.fill = GridBagConstraints.BOTH;
-			gbc_panel.gridx = 5;
-			gbc_panel.gridy = 1;
-			getContentPane().add(list, gbc_panel);
-			
+	public void howManyQuestions() {
+		int cap = questionQueries.getMaxId();
+		System.out.println(cap+" questions found in the database");	
+	}
 	
-			// String query = "SELECT statement FROM question WHERE id="+count;
-			// String result = query;
+	public void findQuestion() {
+		int cap = questionQueries.getMaxId();
+		if (count <= cap){
+			JPanel infoPanel = new JPanel();
+			infoPanel.setBounds(10, 0, 480, 50);
+			getContentPane().add(infoPanel);
+			String labelContent2 = "Statement "+count+"/"+cap;
+			JLabel lblInfo = new JLabel(labelContent2);
+			infoPanel.add(lblInfo);
+			infoPanel.revalidate();
+			infoPanel.repaint();
 			
-			JLabel lblStatement = new JLabel("SELECT statement FROM question WHERE id=" + count);
-			list.add(lblStatement);
+			JPanel statementPanel = new JPanel();
+			statementPanel.setBounds(10, 50, 480, 50);
+			getContentPane().add(statementPanel);
 			
-			list.revalidate();
-			list.repaint();
+			String labelContent = questionQueries.getQuestion(count);
+			JLabel lblStatement = new JLabel(labelContent);
+			statementPanel.add(lblStatement);
+			
+			statementPanel.revalidate();
+			statementPanel.repaint();
 		} else {
 			System.out.println("Game over.");
-			JOptionPane.showMessageDialog(null, "Game Over!\nYour total score was: "+points, "Info", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "You have answered to all questions!\nCorrect Answers: "+points+"/"+cap, "Game Over", JOptionPane.INFORMATION_MESSAGE);
 			MainMenu mainMenuWindow = new MainMenu();
 			mainMenuWindow.setVisible(true);
 			System.out.println("Open Main Menu");

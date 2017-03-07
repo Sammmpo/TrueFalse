@@ -24,12 +24,10 @@ public class MainMenu extends JFrame {
 	boolean playing = false;
 	int count = 1;
 	int points = 0;
+	private QuestionQueries questionQueries;
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		
 		EventQueue.invokeLater(new Runnable() {
@@ -44,39 +42,51 @@ public class MainMenu extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+
 	public MainMenu() {
+		super("Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null); 
 		setBounds(0, 0, 500, 300);
 		setLocationRelativeTo(null);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] {0, 0, 0, 0, 0, 0, 0, 1};
-		gbl_contentPane.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 1};
-		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gbl_contentPane);
 		
+		questionQueries = new QuestionQueries();
 
+		
+		JPanel titlePanel = new JPanel();
+		titlePanel.setBounds(10, 25, 480, 50);
+		getContentPane().add(titlePanel);
+		String labelContent = "TrueFalse";
+		JLabel lblTitle = new JLabel(labelContent);
+		lblTitle.setFont(lblTitle.getFont().deriveFont(20.0f));
+		titlePanel.add(lblTitle);
+		
+		JPanel errorPanel = new JPanel();
+		errorPanel.setBounds(300, 90, 190, 30);
+		getContentPane().add(errorPanel);
+		String labelContent3 = "No statements in the database.";
+		JLabel lblError = new JLabel(labelContent3);
+		lblError.setFont(lblError.getFont().deriveFont(10.0f));
 		
 		JButton btnPlay = new JButton("Play");
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Open Game");
-				Game gameWindow = new Game();
-				gameWindow.setVisible(true);
-				setVisible(false);
+				if (allowPlay() == true){
+					System.out.println("Open Game");
+					Game gameWindow = new Game();
+					gameWindow.setVisible(true);
+					setVisible(false);
+				} else {
+					System.out.println("No statements in the database");
+					errorPanel.add(lblError);
+					errorPanel.revalidate();
+					errorPanel.repaint();
+				}
 			}
 		});
-		GridBagConstraints gbc_btnPlay = new GridBagConstraints();
-		gbc_btnPlay.insets = new Insets(0, 0, 5, 5);
-		gbc_btnPlay.gridx = 3;
-		gbc_btnPlay.gridy = 3;
-		contentPane.add(btnPlay, gbc_btnPlay);
+		btnPlay.setBounds(200, 90, 100, 30);
+		getContentPane().add(btnPlay);
+
 
 		
 		
@@ -91,27 +101,24 @@ public class MainMenu extends JFrame {
 				}
 			}
 		});
-		GridBagConstraints gbc_btnQuestions = new GridBagConstraints();
-		gbc_btnQuestions.insets = new Insets(0, 0, 5, 5);
-		gbc_btnQuestions.gridx = 3;
-		gbc_btnQuestions.gridy = 5;
-		contentPane.add(btnQuestions, gbc_btnQuestions);
+		btnQuestions.setBounds(200, 130, 100, 30);
+		getContentPane().add(btnQuestions);
 		
 		
 		
 		JButton btnQuit = new JButton("Quit");
 		btnQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Close the App");
+				System.out.println("Exit Program");
 				System.exit(0);
 			}
 		});
-		GridBagConstraints gbc_btnQuit = new GridBagConstraints();
-		gbc_btnQuit.insets = new Insets(0, 0, 0, 5);
-		gbc_btnQuit.gridx = 3;
-		gbc_btnQuit.gridy = 7;
-		contentPane.add(btnQuit, gbc_btnQuit);
+		btnQuit.setBounds(200, 190, 100, 30);
+		getContentPane().add(btnQuit);
 	}
+	
+	
+	
 	
 	private void getNewQuestionFromUser (){
 		JTextField statementField = new JTextField(10);
@@ -127,6 +134,13 @@ public class MainMenu extends JFrame {
 	    myPanel.add(falseRadioButton);
 	    
 	    int result = JOptionPane.showConfirmDialog(null, myPanel, "Insert Question", JOptionPane.OK_CANCEL_OPTION);
+	}
+	
+	public boolean allowPlay(){
+		boolean canPlay = false;
+		int numberOfQuestions = questionQueries.getMaxId();
+		if (numberOfQuestions > 0) { canPlay = true; }
+		return canPlay;
 	}
 
 }

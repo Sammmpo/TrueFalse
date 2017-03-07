@@ -5,12 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/*
- * This Class manages database operations associated to the Question Class
- * Don't worry yet about the try/catch/finally blocks in some methods. This will be explained later in the course 
- */
+
 public class QuestionQueries {
-	// DB connection details
+
 	private static final String URL = "jdbc:mysql://localhost:3306/truefalse";
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "";
@@ -19,15 +16,22 @@ public class QuestionQueries {
 	private PreparedStatement selectAllQuestions = null;
 	private PreparedStatement insertQuestion = null;
 	private PreparedStatement deleteAllQuestions = null;
+	private PreparedStatement findQuestion = null;
+	private PreparedStatement findAnswer = null;
+	private PreparedStatement findMaxId = null;
+	private PreparedStatement resetIncr = null;
 	
 	public QuestionQueries()
 	{
 		try
 		{
-			connection = DriverManager.getConnection(URL, USERNAME, PASSWORD); // Starts a connection to the database
-			selectAllQuestions = connection.prepareStatement("SELECT * FROM question"); // Prepare the select query that gets all Questions from the database
+			connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			selectAllQuestions = connection.prepareStatement("SELECT * FROM question");
 			insertQuestion = connection.prepareStatement("INSERT INTO question (statement, answer) VALUES (?, ?)");
 			deleteAllQuestions = connection.prepareStatement("DELETE FROM question");
+			// findMaxId = connection.prepareStatement("SELECT * FROM question WHERE id=(SELECT max(id) FROM question)");
+			findMaxId = connection.prepareStatement("SELECT max(id) FROM question");
+			resetIncr = connection.prepareStatement("ALTER TABLE question AUTO_INCREMENT = 1");
 			
 		}
 		catch (SQLException sqlException)
@@ -37,10 +41,73 @@ public class QuestionQueries {
 		}
 	}
 	
-	/*
-	 * This method will execute the select query that gets all Questions from the database. 
-	 * It returns an ArrayList containing Question objects initialized with Question data from each row in the Questions table (database)
-	 */
+	public boolean getAnswer(int count)
+	{
+		boolean result = false;
+		ResultSet rs = null;
+		try
+		{
+			findAnswer = connection.prepareStatement("SELECT answer FROM question WHERE id="+count);
+			rs = findAnswer.executeQuery();
+			rs.next();
+			result = rs.getBoolean(1);
+		} catch (SQLException sqlException) {	sqlException.printStackTrace(); }
+		return result;
+	}
+	
+	public String getQuestion(int count)
+	{
+		String statement = "statement"+count;
+		ResultSet rs = null;
+		try
+		{
+			findQuestion = connection.prepareStatement("SELECT statement FROM question WHERE id="+count);
+			rs = findQuestion.executeQuery();
+			rs.next();
+			statement = rs.getString(1);
+		} catch (SQLException sqlException) {	sqlException.printStackTrace(); }	
+		return statement;
+	}
+	
+	public int getMaxId()
+	{
+		int result = 0;
+		ResultSet resultSet = null;
+		try
+		{
+			resultSet = findMaxId.executeQuery();
+			resultSet.next();
+			result = resultSet.getInt(1);
+		} catch (SQLException sqlException) {	sqlException.printStackTrace(); }	
+		return result;
+	}
+	
+	/* LONGER METHOD!
+	public int getMaxId()
+	{
+		ArrayList<Question> resultArray = null;
+		ResultSet resultSet = null;
+		try
+		{
+			resultSet = findMaxId.executeQuery();
+			resultArray = new ArrayList<Question>();
+			
+			while (resultSet.next()) {
+			resultArray.add(new Question(
+				resultSet.getInt("id"),
+				resultSet.getString("statement"),
+				resultSet.getBoolean("answer")));
+			}
+		}
+		
+		catch (SQLException sqlException) {	sqlException.printStackTrace(); }
+		Question test = resultArray.get(0);
+		int result = test.getId();
+		return result;
+	}
+	*/
+	
+
 	public ArrayList<Question> getAllQuestions()
 	{
 		ArrayList<Question> results = null;
@@ -48,17 +115,17 @@ public class QuestionQueries {
 		
 		try
 		{
-			resultSet = selectAllQuestions.executeQuery(); // Here is where we actually execute the select query. resultSet contains the rows returned by the query
+			resultSet = selectAllQuestions.executeQuery();
 			results = new ArrayList<Question>();
 		
-			while(resultSet.next()) // for each row returned by the select query...
+			while(resultSet.next())
 			{
-				// Initialize a new Question object with the row's data. Add the Question object to the results ArrayList
 				results.add(new Question(
-					resultSet.getString("statement"), // get the value associated to the platNr column
-					resultSet.getBoolean("answer"))); // get the value associated to the colour column
+				resultSet.getInt("id"),
+				resultSet.getString("statement"),
+				resultSet.getBoolean("answer")));
 			}
-		} // end try
+		}
 		catch (SQLException sqlException)
 		{
 			sqlException.printStackTrace();
@@ -73,10 +140,10 @@ public class QuestionQueries {
 			{
 				sqlException.printStackTrace();
 			}
-		} // end finally
+		}
 		
 		return results;
-	} // end method getAllQuestions
+	}
 	
 
 	
@@ -88,6 +155,7 @@ public class QuestionQueries {
 		try
 		{
 			resultSet = deleteAllQuestions.executeUpdate();
+			resultSet = resetIncr.executeUpdate();
 		}
 		catch (SQLException sqlException)
 		{
@@ -102,11 +170,11 @@ public class QuestionQueries {
 	{
 		try
 		{
-			// Setting the values for the question marks '?' in the prepared statement
+
 			insertQuestion.setString(1, statement);
 			insertQuestion.setBoolean(2, answer);
 						
-			// result will contain the amount of updated rows. It should be 1. To simplify the code let's not verify this
+
 			int result = insertQuestion.executeUpdate(); 
 		}
 		catch (SQLException sqlException)

@@ -32,7 +32,7 @@ public class DisplayQuestions extends JFrame {
 	public DisplayQuestions(){
 		super("Database");
 
-		questionQueries = new QuestionQueries(); // Initializes a carQueries object to handle db operations in this session
+		questionQueries = new QuestionQueries();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane().setLayout(null); 
@@ -46,22 +46,22 @@ public class DisplayQuestions extends JFrame {
 		tableQuestion = new JTable();
 		tableQuestion.setRowSelectionAllowed(false);
 		tableQuestion.setModel(new DefaultTableModel(
-			new Object[MAX_QTY][2],  // Code changed here
-			new String[] {"Statement", "Answer"} // Code changed here
+			new Object[MAX_QTY][2],
+			new String[] {"Statement", "Answer"}
 		));
-		tableQuestion.setBounds(10, 36, 240, 200); // Code changed here
+		tableQuestion.setBounds(10, 35, 240, 200);
 		getContentPane().add(tableQuestion);
 		
 		
 		btnAddQuestion = new JButton("Add Statement");
-		btnAddQuestion.setBounds(270, 36, 150, 18);
+		btnAddQuestion.setBounds(270, 35, 150, 30);
 		getContentPane().add(btnAddQuestion);
 		MyEventHandler commandHandler = new MyEventHandler();
 		btnAddQuestion.addActionListener(commandHandler);
 		
 		
 		btnClear = new JButton("Clear");
-		btnClear.setBounds(270, 56, 150, 18);
+		btnClear.setBounds(270, 100, 150, 30);
 		getContentPane().add(btnClear);
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -78,7 +78,7 @@ public class DisplayQuestions extends JFrame {
 		
 		
 		btnBack = new JButton("Back");
-		btnBack.setBounds(270, 76, 150, 18); // Code changed here
+		btnBack.setBounds(270, 200, 150, 30);
 		getContentPane().add(btnBack);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -102,12 +102,12 @@ public class DisplayQuestions extends JFrame {
 		public void actionPerformed (ActionEvent myEvent)
 		{
 			if (myEvent.getSource() == btnAddQuestion){
-				if (allQuestions.size() < MAX_QTY){ // If the current amount of cars in the database is smaller than MAX_QTY ...
+				if (allQuestions.size() < MAX_QTY){ 
 					getNewQuestionFromUser();
 					populateTable();
 				}
 				else{
-					JOptionPane.showMessageDialog(null, "You can not add more cars in your collection", "Info", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database is full.", "Info", JOptionPane.INFORMATION_MESSAGE);
 				}			
 			}
 		}
@@ -133,22 +133,31 @@ public class DisplayQuestions extends JFrame {
 	    myPanel.add(trueRadioButton);
 	    myPanel.add(falseRadioButton);
 	    
-	    int result = JOptionPane.showConfirmDialog(null, myPanel, "Insert Question", JOptionPane.OK_CANCEL_OPTION);
+	    int result = JOptionPane.showConfirmDialog(null, myPanel, "Add Statement", JOptionPane.OK_CANCEL_OPTION);
 	    
 	    if (result == JOptionPane.OK_OPTION) {
 	    	boolean isTrueSelected = trueRadioButton.isSelected();
+	    	
+	    	if (statementField.getText().length() != 0 && statementField.getText().length() <= 10){
 	    	questionQueries.addQuestion(statementField.getText(), isTrueSelected);
+	    	} else {
+	    		System.out.println("Invalid Statement Input");
+	    		JLabel lblNotification = new JLabel("Has to be 1-10 characters");
+	    		lblNotification.setBounds(280, 62, 150, 30);
+	    		getContentPane().add(lblNotification);
+	    		lblNotification.setFont(lblNotification.getFont().deriveFont(10.0f));
+	    	}
 	    }
 	    
 	}
 	
 	private void populateTable()
 	{		
-		allQuestions = questionQueries.getAllQuestions(); // Calling the CarQueries method that returns a list containing all cars from the database
+		allQuestions = questionQueries.getAllQuestions();
 		
-		for (int row=0; row<allQuestions.size(); row++){ //allCars.size() returns the amount of items in the allCars list
+		for (int row=0; row<allQuestions.size(); row++){ 
 			
-			currentQuestion = allQuestions.get(row); // get a Car from the ArrayList allCars
+			currentQuestion = allQuestions.get(row);
 			
 			tableQuestion.setValueAt(currentQuestion.getStatement(), row, 0);  
 			tableQuestion.setValueAt(currentQuestion.getAnswer(), row, 1);  
