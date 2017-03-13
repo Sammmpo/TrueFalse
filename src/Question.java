@@ -1,5 +1,5 @@
 
-public class Question {
+public class Question {	// Constructor for the "Question" object.
 	
 	private int id;
 	private String statement;
@@ -11,6 +11,8 @@ public class Question {
 		this.statement = aStatement;
 		this.answer = aAnswer;
 	}
+	
+	// Getters to allow the other .java files access the object's attributes.
 
 	public int getId()
 	{
@@ -28,4 +30,4 @@ public class Question {
 	}
 
 
-}
+} // End of this .java file.
