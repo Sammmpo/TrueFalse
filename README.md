@@ -4,14 +4,19 @@ TrueFalse Game
 
 This project was created for Object-Oriented Java course in Laurea University of Applied Sciences.
 
-How to setup / requirements
+How to Quick Setup and Run:
+- Launch MySQL (with XAMPP for example)
+- Run the TrueFalseGame.jar (executable) file.
+- Enjoy the App experience!
+
+Alternative Setup:
 - You need to have Eclipse (with JDBC library) installed on your computer and have access to MySQL.
 - Download the .java files from the GitHub src-folder OR just simply download everything as .ZIP.
 - Import these files into your Eclipse (if you downloaded everything as .ZIP, Eclipse should recognize the files as one project).
 - Launch MySQL (with XAMPP for example).
 - (OPTIONAL) Use the .SQL file (in src-folder) with phpMyAdmin to import 5 default quiz questions. This is not mandatory as the application lets the user create custom quizzes and creates database/tables automatically. You will need Apache for this.
 - Run the java classes with your Eclipse.
-- Enjoy the app experience!
+- Enjoy the App experience!
 
 What is TrueFalse and how to play it?
 - The idea of the application is to let the user create a custom quiz with two possible answers, True and False.
