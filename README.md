@@ -1,5 +1,7 @@
 ((( WORK IN PROGRESS! )))
-App Name: TrueFalse Game
+
+TrueFalse Game
+
 This project was created for Object-Oriented Java course in Laurea University of Applied Sciences.
 
 How to setup / requirements
