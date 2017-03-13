@@ -1,10 +1,8 @@
-((( WORK IN PROGRESS! )))
-
 TrueFalse Game
 
 This project was created for Object-Oriented Java course in Laurea University of Applied Sciences.
 
-What is TrueFalse and what is it for?
+What is TrueFalse?
 - The idea of the application is to let the user create a custom quiz with two possible answers, True and False.
 - In the database menu, the user can see the list of all statements (with their correct answers) in the database. Database management, including creation and deletion of custom statements is also a feature.
 - By clicking 'Play' in the Main Menu, the game will start asking whether the statements are True or False one by one (reading them from the database). After the user has answered to all questions, the application displays the number of correct answers and returns to the Main Menu.
