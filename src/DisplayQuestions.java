@@ -19,16 +19,19 @@ import java.util.ArrayList;
 public class DisplayQuestions extends JFrame {
 	
 	final static int MAX_QTY = 10;		// This is the maximum number of statements allowed in the database.
+	
 	private QuestionQueries questionQueries;	// Enables the use of QuestionQueries.java.
 	private ArrayList<Question> allQuestions;
 	private Question currentQuestion;
+	
 	static JTable tableQuestion;
 	static JButton btnAddQuestion; 
 	static JButton btnClear;
 	static JButton btnBack;
 	
+	static DefaultTableModel myQuestionTableModel;
 
-	
+
 	public DisplayQuestions(){
 		super("Database");	// Header text for the window.
 
@@ -43,14 +46,12 @@ public class DisplayQuestions extends JFrame {
 		lblTheseAreMy.setBounds(10, 11, 187, 14);
 		getContentPane().add(lblTheseAreMy);
 		
+		
 		// The following creates the table in which the statements are displayed in database format.
 		tableQuestion = new JTable();
 		tableQuestion.setRowSelectionAllowed(false);
-		tableQuestion.setModel(new DefaultTableModel(
-			new Object[MAX_QTY][2],		// Size of the table.
-			new String[] {"Statement", "Answer"}	// Horizontal meanings of the table cells.
-		));
-		tableQuestion.setBounds(10, 35, 240, 200);
+		tableQuestion.setModel(createQuestionTableModel()); // Applying a custom model on top of JTable.
+		tableQuestion.setBounds(10, 36, 240, 200);
 		getContentPane().add(tableQuestion);
 		
 		// The following creates the button for adding Statements to the database.
@@ -68,12 +69,7 @@ public class DisplayQuestions extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Clear Database");
 				questionQueries.deleteAllQuestions();	// Self-explanatory, yet relevant.
-				tableQuestion.setModel(new DefaultTableModel(
-					new Object[MAX_QTY][2],
-					new String[] {"Statement", "Answer"}
-				));
-				tableQuestion.revalidate();		// Update the visual side.
-				tableQuestion.repaint();
+				tableQuestion.setModel(createQuestionTableModel()); // No need for revalidate/repaint because this method includes recounting.
 				populateTable();	// Update changes to the table.
 			}
 		});
@@ -93,10 +89,33 @@ public class DisplayQuestions extends JFrame {
 
 		populateTable();	// Update changes to the table.
 
+	} // End of DisplayQuestions method.
+	
+	
+	private DefaultTableModel createQuestionTableModel()
+	{
+		allQuestions = questionQueries.getAllQuestions();
+
+		Object[][] data = new Object[10][2];	// The table size in cells.
+		String[] columns = new String[] {"Statement", "Answer"};
+		
+		for (int row=0; row<allQuestions.size(); row++){	// For loop to fill data cells one by one.
+			currentQuestion = allQuestions.get(row);
+			data[row][0] = currentQuestion.getStatement();  
+			data[row][1] = currentQuestion.getAnswer();  
+		}
+
+		myQuestionTableModel = new DefaultTableModel(data, columns)
+				{
+					@Override
+					public boolean isCellEditable(int row, int column)  // To disable cell editing
+					{
+						return false;
+					}
+				};
+		
+		return myQuestionTableModel;
 	}
-	
-	
-	
 	
 	
 	private class MyEventHandler implements ActionListener
@@ -106,6 +125,7 @@ public class DisplayQuestions extends JFrame {
 			if (myEvent.getSource() == btnAddQuestion){		// This happens when "Add Statements" is clicked.
 				if (allQuestions.size() < MAX_QTY){ 		// If there is room for more questions(=statements).
 					getNewQuestionFromUser();				// Opens the form pop-up.
+					tableQuestion.setModel(createQuestionTableModel());
 					populateTable();						// To make sure the table never shows out-dated information.
 				}
 				else{
@@ -134,9 +154,10 @@ public class DisplayQuestions extends JFrame {
 	    
 	    int result = JOptionPane.showConfirmDialog(null, myPanel, "Add Statement", JOptionPane.OK_CANCEL_OPTION);
 	    
+	    
 	    if (result == JOptionPane.OK_OPTION) {
 	    	boolean isTrueSelected = trueRadioButton.isSelected();	// To get a simple value for the query.
-	    	
+		
 	    	if (statementField.getText().length() != 0 && statementField.getText().length() <= 10){	// To make sure the field is not left empty or too long.
 	    	questionQueries.addQuestion(statementField.getText(), isTrueSelected);	// This adds the user input to the database.
 	    	} else {

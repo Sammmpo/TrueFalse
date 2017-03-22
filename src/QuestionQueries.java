@@ -87,7 +87,7 @@ public class QuestionQueries {
 		return statement;
 	}
 	
-	public int getMaxId()
+	public int getMaxId()	// To get the number of statements in the database.
 	{
 		int result = 0;
 		ResultSet resultSet = null;
@@ -100,35 +100,8 @@ public class QuestionQueries {
 		return result;
 	}
 	
-	
-	
-	/* RESULTSET ALTERNATIVE. Not necessary.
-	public int getMaxId()
-	{
-		ArrayList<Question> resultArray = null;
-		ResultSet resultSet = null;
-		try
-		{
-			resultSet = findMaxId.executeQuery();
-			resultArray = new ArrayList<Question>();
-			
-			while (resultSet.next()) {
-			resultArray.add(new Question(
-				resultSet.getInt("id"),
-				resultSet.getString("statement"),
-				resultSet.getBoolean("answer")));
-			}
-		}
-		
-		catch (SQLException sqlException) {	sqlException.printStackTrace(); }
-		Question test = resultArray.get(0);
-		int result = test.getId();
-		return result;
-	}
-	*/
-	
 
-	
+
 	public ArrayList<Question> getAllQuestions()	// Array used for populating the table in "DisplayQuestions.java".
 	{
 		ArrayList<Question> results = null;
