@@ -1,6 +1,15 @@
 /* Import this script into phpMyAdmin to setup everything. */
 /* Use this after running the application at least once. */
 
+DROP TABLE IF EXISTS question;
+
+CREATE TABLE question (
+    id integer NOT NULL,
+    statement VARCHAR(30) NOT NULL,
+    answer BOOLEAN NOT NULL,
+    PRIMARY KEY (id )
+);
+
 INSERT INTO question (id, statement, answer) VALUES (1, "1+1=3", false);
 INSERT INTO question (id, statement, answer) VALUES (2, "2+8=10", true);
 INSERT INTO question (id, statement, answer) VALUES (3, "1+1=2", true);
