@@ -25,3 +25,37 @@ Commonly known bugs:
 - Editing the database during a play-session may result in a crash. However, this should require the user having two copies of the application running at the same time. This could be fixed by making the application run a new instance of the database when entering the 'play mode'.
 
 You can find a screenshot of the GUI in the files folder.
+
+_____
+
+List of Variables and Objects in each class:
+
+MainMenu.java
+- boolean playing
+- multiple button objects
+- instance of object QuestionQueries "questionQueries"
+
+Game.java
+- int count
+- int points
+- boolean userAnswer
+- instance of QuestionQueries
+- multiple button objects
+
+DisplayQuestions.java
+- JTable tableQuestion
+- JButton btnAddQuestion
+- JButton btnClear
+- JButton btnBack
+- instance of object DefaultTableModel "myQuestionTableModel"
+- ArrayList<Question> allQuestions
+- instance of object Question "currentQuestion"
+
+QuestionQueries.java
+- Prepared Statements
+
+Question.java
+- Constructor for Question objects
+- int id
+- String statement
+- boolean answer
