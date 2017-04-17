@@ -18,6 +18,6 @@ INSERT INTO question (id, statement, answer) VALUES (5, "9+7=18", false);
 
 INSERT INTO question (id, statement, answer) VALUES (6, "3+10=33", false);
 INSERT INTO question (id, statement, answer) VALUES (7, "10+1=21", false);
-INSERT INTO question (id, statement, answer) VALUES (8, "10-4=4", true);
+INSERT INTO question (id, statement, answer) VALUES (8, "10-4=4", false);
 INSERT INTO question (id, statement, answer) VALUES (9, "2*3=6", true);
 INSERT INTO question (id, statement, answer) VALUES (10, "10*100=10000", false);
