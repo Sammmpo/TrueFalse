@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS question;
 
 CREATE TABLE question (
-    id integer NOT NULL,
+    id integer NOT NULL AUTO_INCREMENT,
     statement VARCHAR(30) NOT NULL,
     answer BOOLEAN NOT NULL,
     PRIMARY KEY (id )
