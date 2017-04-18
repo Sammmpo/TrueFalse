@@ -15,7 +15,7 @@ public class QuestionQueries {
 	
 	private java.sql.Connection  connection = null;
 	private java.sql.Statement dbCreator = null;
-	private java.sql.Statement tableCreator = null;	// Another statement had to be created for some reason.
+	private java.sql.Statement tableCreator = null;	// Defining this variable here so that we can generate the database and table immediately when the app launches.
 	
 	private static String jdbcDriver = "com.mysql.jdbc.Driver";
 	
